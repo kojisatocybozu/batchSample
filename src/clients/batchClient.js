@@ -16,12 +16,12 @@ export function createBatchRequests(queries) {
     custom_id: `request-${index}`,
     params: {
       model: 'claude-opus-4-1-20250805',
-      max_tokens: 2048,
+      max_tokens: 16384,
       tools: [
         {
           type: 'web_search_20250305',  // 日付付きバージョン指定
           name: 'web_search',
-          max_uses: 5,  // オプション：1リクエストあたり最大5回検索          type: 'web_search',
+          max_uses: 5,  // オプション：1リクエストあたり最大5回検索
         },
       ],
       messages: [

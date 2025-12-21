@@ -36,7 +36,7 @@ function generateQueriesFromRecords(records) {
     const content = record.会社名.value || '';
 
     // クエリを生成
-    return `この会社の最近の経営に関するニュースについて調べてください：\n\n会社名: ${content}`;
+    return `この会社の最近の経営に関する主なニュースについて、5件調べて教えてください：\n\n会社名: ${content}`;
   });
 
   return queries;

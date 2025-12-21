@@ -74,7 +74,7 @@ async function main() {
     console.log(`✅ 結果取得完了: ${batchResults.length} 件`);
 
     // ステップ8: 結果を表示して保存
-    displayAndSaveResults(batchResults, batchId);
+    // displayAndSaveResults(batchResults, batchId);
 
     // ステップ9: Kintone のレコードを更新
     await updateKintoneRecords(batchResults, kintoneRecords);
