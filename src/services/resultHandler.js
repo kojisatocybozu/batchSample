@@ -1,7 +1,3 @@
-// ============================================
-// src/services/resultHandler.js
-// ============================================
-
 import anthropic from '../clients/batchClient.js';
 
 export async function getBatchResults(batchId) {
@@ -18,17 +14,28 @@ export async function getBatchResults(batchId) {
 
       if (entry.result.type === 'succeeded') {
         const message = entry.result.message;
+        
+        // content_block を確認
+        let content = '(コンテンツなし)';
+        if (message.content && message.content.length > 0) {
+          // テキストコンテンツを探す
+          const textContent = message.content.find(block => block.type === 'text');
+          if (textContent && textContent.text) {
+            content = textContent.text;
+          }
+        }
+
         results.push({
           id: entry.custom_id,
           status: 'succeeded',
-          content: message.content[0].text,
+          content: content,
         });
         console.log(`   ✓ ${entry.custom_id} - 成功`);
       } else if (entry.result.type === 'errored') {
         results.push({
           id: entry.custom_id,
           status: 'errored',
-          error: entry.result.error.message,
+          error: entry.result.error.message || '不明なエラー',
         });
         console.log(
           `   ✗ ${entry.custom_id} - エラー: ${entry.result.error.message}`
@@ -37,12 +44,15 @@ export async function getBatchResults(batchId) {
         results.push({
           id: entry.custom_id,
           status: 'expired',
+          error: '期限切れ',
         });
         console.log(`   ⏱ ${entry.custom_id} - 期限切れ`);
       }
     }
 
     console.log(`\n📊 結果数: ${count}件\n`);
+    
+    // 明示的に results を返す
     return results;
   } catch (error) {
     console.error('❌ 結果取得エラー:', error);
@@ -51,4 +61,3 @@ export async function getBatchResults(batchId) {
 }
 
 export default getBatchResults;
-
