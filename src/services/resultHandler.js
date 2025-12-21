@@ -15,22 +15,32 @@ export async function getBatchResults(batchId) {
       if (entry.result.type === 'succeeded') {
         const message = entry.result.message;
         
-        // content_block を確認
-        let content = '(コンテンツなし)';
+        // すべてのコンテンツブロックを処理
+        let fullContent = '';
+        
         if (message.content && message.content.length > 0) {
-          // テキストコンテンツを探す
-          const textContent = message.content.find(block => block.type === 'text');
-          if (textContent && textContent.text) {
-            content = textContent.text;
-          }
+          // テキストとツール使用結果をまとめる
+          message.content.forEach((block) => {
+            if (block.type === 'text') {
+              fullContent += block.text;
+            } else if (block.type === 'tool_use') {
+              // ツール使用情報は含めない（テキストのみ）
+              console.log(`   ℹ️ ${entry.custom_id} - Web Search を使用しました`);
+            }
+          });
+        }
+
+        // コンテンツが空でないか確認
+        if (!fullContent.trim()) {
+          fullContent = '(コンテンツなし)';
         }
 
         results.push({
           id: entry.custom_id,
           status: 'succeeded',
-          content: content,
+          content: fullContent,
         });
-        console.log(`   ✓ ${entry.custom_id} - 成功`);
+        console.log(`   ✓ ${entry.custom_id} - 成功（${fullContent.length} 文字）`);
       } else if (entry.result.type === 'errored') {
         results.push({
           id: entry.custom_id,

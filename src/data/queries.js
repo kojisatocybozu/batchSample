@@ -32,16 +32,20 @@ async function fetchRecordsFromKintone() {
 // Kintone のレコードからクエリを生成
 function generateQueriesFromRecords(records) {
   const queries = records.map((record) => {
-    // フィールドコードを適切に置き換えてください
-    const content = record.会社名.value || '';
+    const company = record.会社名?.value || '(会社名なし)';
+    
+    return `${company} について Web で検索して、以下の情報を詳しく提供してください：
 
-    // クエリを生成
-    return `この会社の最近の経営に関する主なニュースについて、5件調べて教えてください：\n\n会社名: ${content}`;
+1. 直近のニュースと重要な発表
+2. 経営戦略の最新動向
+3. 最新の業績データ
+4. 業界内での現在の立場
+
+Web 検索を使用して最新情報を取得し、詳細に分析して回答してください。`;
   });
 
   return queries;
 }
-
 // メイン関数：Kintone からデータを取得してクエリを生成
 export async function getQueries() {
   try {

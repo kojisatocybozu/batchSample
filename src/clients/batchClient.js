@@ -1,10 +1,6 @@
-// ============================================
-// src/clients/batchClient.js
-// ============================================
 import * as dotenv from 'dotenv';
 import Anthropic from '@anthropic-ai/sdk';
 
-// .env ファイルを最初に読み込む
 dotenv.config({ path: '.env' });
 
 const anthropic = new Anthropic({
@@ -15,13 +11,12 @@ export function createBatchRequests(queries) {
   return queries.map((query, index) => ({
     custom_id: `request-${index}`,
     params: {
-      model: 'claude-opus-4-1-20250805',
-      max_tokens: 16384,
+      model: process.env.CLAUDE_MODEL || 'claude-opus-4-1-20250805',
+      max_tokens: 4096,
       tools: [
         {
-          type: 'web_search_20250305',  // 日付付きバージョン指定
+          type: 'web_search_20250305',
           name: 'web_search',
-          max_uses: 5,  // オプション：1リクエストあたり最大5回検索
         },
       ],
       messages: [
@@ -35,7 +30,7 @@ export function createBatchRequests(queries) {
 }
 
 export async function submitBatch(requests) {
-  console.log(`\n📤 バッチを送信中... (${requests.length}件のリクエスト)\n`);
+  console.log(`\n📤 バッチを送信中... (${requests.length}件のリクエスト、Web Search 有効)\n`);
 
   try {
     const batch = await anthropic.messages.batches.create({
@@ -45,6 +40,7 @@ export async function submitBatch(requests) {
     console.log(`✅ バッチ送信成功`);
     console.log(`   バッチID: ${batch.id}`);
     console.log(`   ステータス: ${batch.processing_status}`);
+    console.log(`   💡 Web Search ツールが有効です。最新情報を検索して回答します。\n`);
 
     return batch.id;
   } catch (error) {
