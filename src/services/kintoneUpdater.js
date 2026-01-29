@@ -105,10 +105,6 @@ export async function updateKintoneRecords(batchResults, kintoneRecords) {
         });
 
         console.log(`✅ バッチ ${batchNumber} - ${result.records.length} 件の更新に成功しました`);
-        
-        result.records.forEach((record, idx) => {
-          console.log(`   [${idx + 1}] Kintone ID: ${record.id}`);
-        });
 
         totalUpdated.push(...result.records);
       } catch (batchError) {

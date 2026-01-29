@@ -17,12 +17,9 @@ async function main() {
     console.log('============================================\n');
 
     // ステップ1: Kintone からレコードを取得
-    console.log('📚 Kintone からレコードを取得中...\n');
     const kintoneRecords = await fetchRecordsFromKintoneForUpdate();
-    console.log(`✅ Kintone からレコード取得完了: ${kintoneRecords.length} 件\n`);
 
     // ステップ2: クエリを生成
-    console.log('📝 クエリを生成中...\n');
     const queries = await getQueries();
 
     // クエリの確認

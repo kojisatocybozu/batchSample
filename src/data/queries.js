@@ -14,10 +14,11 @@ const kintoneClient = new KintoneRestAPIClient({
 async function fetchRecordsFromKintone() {
   try {
     console.log('🔍 Kintone からレコードを取得中...\n');
-
+    const query = '調査対象 in ("On")';
     const { records } = await kintoneClient.record.getRecords({
       app: process.env.KINTONE_APP_ID,
       limit: 100,  // 最大100件を取得
+      query: query,
     });
 
     console.log(`✅ ${records.length} 件のレコードを取得しました\n`);
@@ -59,10 +60,6 @@ export async function getQueries() {
     // ステップ2: レコードからクエリを生成
     const queries = generateQueriesFromRecords(records);
 
-    console.log(`📝 生成されたクエリ数: ${queries.length}件\n`);
-    queries.forEach((q, i) => {
-      console.log(`  ${i + 1}. ${q.substring(0, 50)}...`);
-    });
     console.log();
 
     return queries;
