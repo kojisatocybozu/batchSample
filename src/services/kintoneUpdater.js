@@ -135,10 +135,11 @@ export async function updateKintoneRecords(batchResults, kintoneRecords) {
 export async function fetchRecordsFromKintoneForUpdate() {
   try {
     console.log('📥 Kintone からレコードを取得中...');
+    const query = '調査対象 in ("On")';
     
     const { records } = await kintoneClient.record.getRecords({
       app: process.env.KINTONE_APP_ID,
-      limit: 100,
+      query: query,
     });
 
     console.log(`✅ ${records.length} 件のレコードを取得しました`);
