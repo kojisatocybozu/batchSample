@@ -15,17 +15,11 @@ function buildKintoneUpdateData(batchResults, kintoneRecords) {
   console.log(`\n【Kintone 更新データ構築 - デバッグ情報】`);
   console.log(`バッチ結果数: ${batchResults.length}`);
   console.log(`Kintone レコード数: ${kintoneRecords.length}`);
-  console.log(`バッチ結果の詳細:`);
-  
-  batchResults.forEach((result, idx) => {
-    console.log(`  [${idx}] id: ${result.id}, status: ${result.status}`);
-  });
 
   const updateRecords = [];
 
   // バッチ結果をマッピング（request-0 -> records[0] など）
   batchResults.forEach((result, index) => {
-    console.log(`\n処理 ${index}: ${result.id}`);
 
     // custom_id から インデックスを抽出（例："request-0" -> 0）
     const indexMatch = result.id.match(/request-(\d+)/);
@@ -34,25 +28,17 @@ function buildKintoneUpdateData(batchResults, kintoneRecords) {
       console.log(`  ⚠️ インデックスを抽出できませんでした`);
       return;
     }
-
     const recordIndex = parseInt(indexMatch[1], 10);
-    console.log(`  インデックス: ${recordIndex}`);
-
     const kintoneRecord = kintoneRecords[recordIndex];
-
     if (!kintoneRecord) {
       console.log(`  ⚠️ 対応する Kintone レコードが見つかりません`);
       return;
     }
-
     const recordId = kintoneRecord.$id.value;
-    console.log(`  ✓ Kintone レコードID: ${recordId}`);
-
     // 更新データを構築
     const updateData = {
       id: recordId,
       record: {
-        // フィールドコードを実際のものに置き換えてください
         最近の経営に関するニュース: {
           value: result.status === 'succeeded' ? result.content : `エラー: ${result.error || '不明なエラー'}`,
         },
@@ -60,7 +46,6 @@ function buildKintoneUpdateData(batchResults, kintoneRecords) {
     };
 
     updateRecords.push(updateData);
-    console.log(`  ✅ 更新データに追加しました`);
   });
 
   console.log(`\n更新対象レコード数: ${updateRecords.length}\n`);
@@ -132,7 +117,6 @@ export async function fetchRecordsFromKintoneForUpdate() {
   try {
     console.log('📥 Kintone からレコードを取得中...');
     const query = '調査対象 in ("On")';
-    
     const { records } = await kintoneClient.record.getRecords({
       app: process.env.KINTONE_APP_ID,
       query: query,
