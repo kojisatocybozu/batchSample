@@ -6,7 +6,6 @@ dotenv.config();
 import { createBatchRequests, submitBatch } from './clients/batchClient.js';
 import { waitForBatchCompletion } from './services/batchMonitor.js';
 import { getBatchResults } from './services/resultHandler.js';
-import { displayAndSaveResults } from './services/fileOutput.js';
 import { updateKintoneRecords, fetchRecordsFromKintoneForUpdate } from './services/kintoneUpdater.js';
 import { getQueries } from './data/queries.js';
 
@@ -27,12 +26,6 @@ async function main() {
       console.log('⚠️ クエリが生成されていません');
       process.exit(1);
     }
-
-    console.log(`\n📝 処理対象: ${queries.length}件のクエリ\n`);
-    queries.forEach((q, i) => {
-      const preview = typeof q === 'string' ? q.substring(0, 50) : '(文字列でない)';
-      console.log(`  ${i + 1}. ${preview}...`);
-    });
 
     // ステップ3: バッチリクエストを作成
     console.log();
@@ -70,10 +63,7 @@ async function main() {
     const batchResults = await getBatchResults(batchId);
     console.log(`✅ 結果取得完了: ${batchResults.length} 件`);
 
-    // ステップ8: 結果を表示して保存
-    // displayAndSaveResults(batchResults, batchId);
-
-    // ステップ9: Kintone のレコードを更新
+    // ステップ8: Kintone のレコードを更新
     await updateKintoneRecords(batchResults, kintoneRecords);
 
     console.log('✅ 処理完了！');
