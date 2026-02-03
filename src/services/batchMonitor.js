@@ -12,7 +12,6 @@ export async function waitForBatchCompletion(batchId) {
   const maxWaitTime = parseInt(process.env.BATCH_MAX_WAIT_TIME) || 600000;
   const checkInterval = parseInt(process.env.BATCH_CHECK_INTERVAL) || 5000;
 
-  console.log(`⏳ バッチ処理の完了を待機中...`);
   console.log(`   タイムアウト: ${maxWaitTime / 1000}秒\n`);
 
   while (true) {
