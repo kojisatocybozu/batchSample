@@ -1,7 +1,7 @@
 import anthropic from '../clients/batchClient.js';
 
 export async function getBatchResults(batchId) {
-  console.log(`\n📥 バッチ結果を取得中...`);
+//  console.log(`\n📥 バッチ結果を取得中...`);
 
   const results = [];
   let count = 0;
@@ -40,7 +40,7 @@ export async function getBatchResults(batchId) {
           status: 'succeeded',
           content: fullContent,
         });
-        console.log(`   ✓ ${entry.custom_id} - 成功（${fullContent.length} 文字）`);
+//        console.log(`   ✓ ${entry.custom_id} - 成功（${fullContent.length} 文字）`);
       } else if (entry.result.type === 'errored') {
         results.push({
           id: entry.custom_id,

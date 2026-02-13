@@ -10,7 +10,7 @@ export async function waitForBatchCompletion(batchId) {
   let lastStatus = 'in_progress';
 
   const maxWaitTime = parseInt(process.env.BATCH_MAX_WAIT_TIME) || 600000;
-  const checkInterval = parseInt(process.env.BATCH_CHECK_INTERVAL) || 5000;
+  const checkInterval = parseInt(process.env.BATCH_CHECK_INTERVAL) || 10000;
 
   console.log(`   タイムアウト: ${maxWaitTime / 1000}秒\n`);
 
@@ -22,10 +22,11 @@ export async function waitForBatchCompletion(batchId) {
 
     // ステータスが変わった場合のみ表示
     if (batch.processing_status !== lastStatus) {
-      console.log(`[${elapsedSeconds}秒経過] ステータス: ${batch.processing_status}`);
+/*      console.log(`[${elapsedSeconds}秒経過] ステータス: ${batch.processing_status}`);
       console.log(
         `   成功: ${batch.request_counts.succeeded} | 処理中: ${batch.request_counts.processing} | エラー: ${batch.request_counts.errored}`
       );
+*/
       lastStatus = batch.processing_status;
     }
 
